@@ -63,9 +63,6 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
             {loading ? "Logowanie..." : "Zaloguj"}
           </button>
         </form>
-        <p className="text-[11px] text-neutral-500 mt-4 text-center">
-          E-mail ukryty, używamy tylko hasła właściciela
-        </p>
       </div>
     </div>
   );

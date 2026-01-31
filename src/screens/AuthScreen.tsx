@@ -1,33 +1,26 @@
 import React, { useState } from "react";
-import { supabase } from "../lib/supabaseClient";
 
-const OWNER_EMAIL =
-  import.meta.env.VITE_SUPABASE_OWNER_EMAIL || "owner@local.silownia";
+const CORRECT_PASSWORD = import.meta.env.VITE_APP_PASSWORD || "silka123";
 
 interface AuthScreenProps {
-  onLogin?: () => void;
+  onLogin: () => void;
 }
 
 export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: OWNER_EMAIL,
-      password,
-    });
-    setLoading(false);
-    if (error) {
+
+    if (password === CORRECT_PASSWORD) {
+      localStorage.setItem("silkoapp_authenticated", "true");
+      setPassword("");
+      onLogin();
+    } else {
       setError("Błędne hasło");
-      return;
     }
-    setPassword("");
-    onLogin?.();
   };
 
   return (
@@ -57,10 +50,9 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
           {error && <p className="text-xs text-red-600">{error}</p>}
           <button
             type="submit"
-            disabled={loading}
-            className="w-full py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-semibold text-sm transition-all active:scale-95 disabled:opacity-60"
+            className="w-full py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-semibold text-sm transition-all active:scale-95"
           >
-            {loading ? "Logowanie..." : "Zaloguj"}
+            Zaloguj
           </button>
         </form>
       </div>
